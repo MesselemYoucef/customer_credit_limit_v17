@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 class SaleModel (models.Model):
@@ -11,6 +11,9 @@ class SaleModel (models.Model):
     balance = fields.Float(related="partner_id.balance", String="Balance")
     amount_available = fields.Float(related="partner_id.amount_available", String="Amount_available")
 
+
+
+
     # @api.constrains("amount_total")
     # def _check_amount_available(self):
     #     for record in self:
@@ -18,10 +21,21 @@ class SaleModel (models.Model):
     #             raise ValidationError("Please check the Credit Limit.")
     #     #All records passed the test don't return anything
 
-    @api.onchange("amount_total")
-    def _onchange_amount_total(self):
-        print(self.amount_total)
-        print(self.state)
-        if self.amount_available < self.amount_total:
-            raise ValidationError("Please check the Credit Limit.")
-        return
+    # @api.onchange("total_amount")
+    # def onchange_amount(self):
+    #     res = {}
+    #     res['warning'] = {'title': ("Warning"), 'message': ('Over Credit Limit'), }
+    #     return res
+
+    # @api.depends("amount_total")
+    # def _check_user_cost_privilege(self):
+    #     res = {}
+    #     for record in self:
+    #         if record.amount_available < record.amount_total:
+    #             res['warning'] = {'title': ("Warning"), 'message': ('Over Credit Limit'), }
+    #             return res
+
+    # def compute_amounts(self):
+    #     res = super(SaleModel, self).compute_amounts()
+    #     res['warning'] = {'title': ("Warning"), 'message': ('Over Credit Limit'), }
+    #     return res
