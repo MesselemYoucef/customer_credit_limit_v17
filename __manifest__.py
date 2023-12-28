@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Credit Limit V16',
+    'name': 'Credit Limit V17',
     'version': '1.0',
     'summary': 'Calculate the Credit Limit for the customers',
     'sequence': -102,
@@ -14,6 +14,8 @@
         'sale'
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'wizard/warning_wizard.xml',
         'views/partner_view.xml',
         'views/sale_view.xml',
     ],

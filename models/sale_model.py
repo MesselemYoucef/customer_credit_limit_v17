@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 
 class SaleModel (models.Model):
     _inherit = "sale.order"
@@ -10,32 +10,32 @@ class SaleModel (models.Model):
     total_payable = fields.Float(related="partner_id.total_payable", String="Debit")
     balance = fields.Float(related="partner_id.balance", String="Balance")
     amount_available = fields.Float(related="partner_id.amount_available", String="Amount_available")
+    
+    
+    def action_confirm(self):
+        for order in self:
+            if order.amount_available < order.amount_total:
+                raise UserError("Over Credit Limit")
+        return super(SaleModel, self).action_confirm()
 
 
-
-
-    # @api.constrains("amount_total")
-    # def _check_amount_available(self):
-    #     for record in self:
-    #         if record.amount_available < record.amount_total:
-    #             raise ValidationError("Please check the Credit Limit.")
-    #     #All records passed the test don't return anything
-
-    # @api.onchange("total_amount")
-    # def onchange_amount(self):
-    #     res = {}
-    #     res['warning'] = {'title': ("Warning"), 'message': ('Over Credit Limit'), }
-    #     return res
-
-    # @api.depends("amount_total")
-    # def _check_user_cost_privilege(self):
-    #     res = {}
-    #     for record in self:
-    #         if record.amount_available < record.amount_total:
-    #             res['warning'] = {'title': ("Warning"), 'message': ('Over Credit Limit'), }
-    #             return res
-
-    # def compute_amounts(self):
-    #     res = super(SaleModel, self).compute_amounts()
-    #     res['warning'] = {'title': ("Warning"), 'message': ('Over Credit Limit'), }
+    # def action_confirm(self):
+    #     print("action has been confirmed")
+    #     view_id = self.env.ref('customer_credit_limit_v17.view_warning_wizard_form')
+    #     context = dict(self.env.context or {})
+    #     context['message'] = "Over Credit Limit"
+    #     context['default_sale_id'] = self.id
+    #     if self.amount_available < self.amount_total:
+    #         print("There should be an error here")
+    #         return {
+    #             'name': 'Warning',
+    #             'type': 'ir.actions.act_window',
+    #             'view_mode': 'form',
+    #             'res_model': 'warning.wizard',
+    #             'view_id': view_id.id,
+    #             'target': 'new',
+    #             'context': context,
+    #         }
+    # 
+    #     res = super(SaleModel, self).action_confirm()
     #     return res
